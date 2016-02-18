@@ -1,0 +1,19 @@
+[Unit]
+Description=Kubernetes Kube-Proxy Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=kubelet.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/opt/bin/kube-proxy \
+                          --master=http://${KUBE_MASTER}:8080
+
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+Global=True
+MachineMetadata=kube=minion

@@ -1,0 +1,21 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=apiserver.service
+After=apiserver.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/opt/bin/kube-controller-manager \
+													--cloud-provider=vagrant \
+													--master=http://${COREOS_PUBLIC_IPV4}:8080 \
+													--logtostderr=true --v=0
+
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+MachineOf=apiserver.service

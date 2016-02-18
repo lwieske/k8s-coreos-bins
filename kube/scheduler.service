@@ -1,0 +1,20 @@
+[Unit]
+Description=Kubernetes Scheduler Plugin
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=apiserver.service
+After=apiserver.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/opt/bin/kube-scheduler \
+													--master=http://${COREOS_PUBLIC_IPV4}:8080 \
+													--logtostderr=true --v=0
+
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+MachineOf=apiserver.service

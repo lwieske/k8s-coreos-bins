@@ -1,0 +1,26 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+After=etcd.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/opt/bin/kube-apiserver \
+													--allow_privileged=true \
+													--cloud_provider=vagrant \
+													--etcd_servers=${COREOS_ETCD_SERVERS} \
+													--insecure_bind_address=0.0.0.0 \
+													--logtostderr=true \
+													--service-cluster-ip-range=${FLANNEL_IP_RANGE} \
+													--v=2
+
+Restart=always
+Type=notify
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+MachineMetadata=kube=master
